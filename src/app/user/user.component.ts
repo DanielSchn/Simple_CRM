@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -6,8 +6,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Firestore, collection, collectionData, onSnapshot } from '@angular/fire/firestore';
+import { Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { User } from '../../models/user.class';
 
@@ -28,8 +28,9 @@ import { User } from '../../models/user.class';
 })
 export class UserComponent implements OnInit {
   private firestore: Firestore = inject(Firestore);
-  users$!: Observable<User[]>;
   allUsers: User[] = [];
+  users$!: Observable<User[]>;
+  
 
   constructor(public dialog: MatDialog) { }
 
