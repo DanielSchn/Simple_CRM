@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,6 +7,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { User } from '../../models/user.class';
 import { FormsModule } from '@angular/forms';
+import { Firestore, addDoc, collection } from '@angular/fire/firestore';
+
 
 @Component({
   selector: 'app-dialog-add-user',
@@ -18,7 +20,7 @@ import { FormsModule } from '@angular/forms';
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    FormsModule
+    FormsModule,
   ],
   templateUrl: './dialog-add-user.component.html',
   styleUrl: './dialog-add-user.component.scss'
@@ -26,12 +28,20 @@ import { FormsModule } from '@angular/forms';
 export class DialogAddUserComponent {
   user = new User();
   birthDate: Date = new Date();
-
+  private firestore: Firestore = inject(Firestore);
 
 
   saveUser() {
     this.user.birthDate = this.birthDate.getTime();
     console.log(this.user);
     
+    const usersCollection = collection(this.firestore, 'users');
+    addDoc(usersCollection, this.user.toJSON())
+      .then((result) => {
+        console.log('success', result);
+      })
+      .catch((error) => {
+        console.error('ERROR', error)
+      });
   }
 }
