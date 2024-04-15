@@ -19,11 +19,11 @@ export class UserDetailComponent {
 
   constructor(private route: ActivatedRoute, private userService: UserService) {
     this.id = this.route.snapshot.paramMap.get('id') || '';
-    this.getSingleUser(this.id);
+    this.getSingleUser();
   }
 
-  getSingleUser(id: string) {
-    this.userService.getSingleDocRef(id).then(data => {
+  getSingleUser() {
+    this.userService.getSingleDocRef(this.id).then(data => {
       this.userData = new User(data);
       console.log(this.userData);
     }).catch(error => {
