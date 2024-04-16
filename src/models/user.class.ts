@@ -6,7 +6,7 @@ export class User {
     street: string;
     zipCode: number;
     city: string;
-    customUserId: string;
+    customUserId?: string;
 
     constructor(obj?: any) {
         this.firstName = obj ? obj.firstName : '';

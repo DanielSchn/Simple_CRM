@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../firebase-services/user.service';
@@ -9,6 +9,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogEditUserComponent } from '../dialog-edit-user/dialog-edit-user.component';
 import { DialogEditAddressComponent } from '../dialog-edit-address/dialog-edit-address.component';
+import { Firestore, doc, onSnapshot } from '@angular/fire/firestore';
 
 
 @Component({
@@ -26,6 +27,7 @@ import { DialogEditAddressComponent } from '../dialog-edit-address/dialog-edit-a
 export class UserDetailComponent {
   id: string = '';
   userData: User = new User();
+  private firestore: Firestore = inject(Firestore);
 
   constructor(
     private route: ActivatedRoute,
@@ -37,21 +39,41 @@ export class UserDetailComponent {
   }
 
   getSingleUser() {
-    this.userService.getSingleDocRef(this.id).then(data => {
-      this.userData = new User(data);
-      console.log(this.userData);
-    }).catch(error => {
-      console.error('Error fetching User', error);
+    const docRef = doc(this.firestore, 'users', this.id);
+    return onSnapshot(docRef, (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        const userData = docSnapshot.data();
+        const user = new User(userData);
+        user.customUserId = docSnapshot.id;
+        this.userData = user;
+        console.log(this.userData);
+      } else {
+        console.error('Not exists');
+      }
+    }, (error) => {
+      console.error('Error', error);
     });
+
+
+    // this.userService.getSingleDocRef(this.id).then(data => {
+    //   this.userData = new User(data);
+    //   console.log(this.userData);
+    // }).catch(error => {
+    //   console.error('Error fetching User', error);
+    // });
   }
 
 
   editUser() {
-    this.dialog.open(DialogEditUserComponent);
+    const dialog = this.dialog.open(DialogEditUserComponent);
+    dialog.componentInstance.user = new User(this.userData.toJSON());
+    dialog.componentInstance.userId = this.id;
   }
 
   editAddress() {
-    this.dialog.open(DialogEditAddressComponent);
+    const dialog = this.dialog.open(DialogEditAddressComponent);
+    dialog.componentInstance.user = new User(this.userData.toJSON());
+    dialog.componentInstance.userId = this.id;
   }
 
 }
