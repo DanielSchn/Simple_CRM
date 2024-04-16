@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { User } from '../../models/user.class';
-import { Firestore } from '@angular/fire/firestore';
+import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-dialog-edit-address',
@@ -33,5 +33,19 @@ export class DialogEditAddressComponent {
   constructor(public dialogRef: MatDialogRef<DialogEditAddressComponent>) {}
 
 
-  saveUser() {}
+  saveUser() {
+    this.loading = true;
+    const docRef = doc(this.firestore, 'users', this.userId);
+    const userData = this.user.toJSON();
+    delete userData.customUserId;
+    updateDoc(docRef, userData)
+      .then((result) => {
+        console.log('success', result);
+        this.loading = false;
+        this.dialogRef.close();
+      })
+      .catch((error) => {
+        console.error('ERROR', error)
+      });
+  }
 }
