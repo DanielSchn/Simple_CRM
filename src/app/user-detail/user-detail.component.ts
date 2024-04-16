@@ -6,6 +6,9 @@ import { User } from '../../models/user.class';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogEditUserComponent } from '../dialog-edit-user/dialog-edit-user.component';
+import { DialogEditAddressComponent } from '../dialog-edit-address/dialog-edit-address.component';
 
 
 @Component({
@@ -24,7 +27,11 @@ export class UserDetailComponent {
   id: string = '';
   userData: User = new User();
 
-  constructor(private route: ActivatedRoute, private userService: UserService) {
+  constructor(
+    private route: ActivatedRoute,
+    private userService: UserService,
+    public dialog: MatDialog
+  ) {
     this.id = this.route.snapshot.paramMap.get('id') || '';
     this.getSingleUser();
   }
@@ -39,7 +46,12 @@ export class UserDetailComponent {
   }
 
 
-  openAddressDialog() {
-
+  editUser() {
+    this.dialog.open(DialogEditUserComponent);
   }
+
+  editAddress() {
+    this.dialog.open(DialogEditAddressComponent);
+  }
+
 }
