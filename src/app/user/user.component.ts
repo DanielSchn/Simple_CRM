@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { User } from '../../models/user.class';
 import { UserService } from '../firebase-services/user.service';
 import { RouterLink } from '@angular/router';
+import { Firestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-user',
@@ -29,7 +30,7 @@ import { RouterLink } from '@angular/router';
 })
 export class UserComponent {
   //@Input() userList!: User;
-  //firestore: Firestore = inject(Firestore);
+  firestore: Firestore = inject(Firestore);
   //allUsersList: User[] = [];
   //users$!: Observable<User[]>;
 
