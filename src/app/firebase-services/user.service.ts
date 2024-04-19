@@ -28,8 +28,6 @@ export class UserService {
                 const user = new User(userData);
                 user.customUserId = element.id;
                 this.allUsers.push(user);
-                console.log(this.allUsers);
-
             });
         });
     }

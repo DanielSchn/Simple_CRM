@@ -29,51 +29,18 @@ import { Firestore } from '@angular/fire/firestore';
   styleUrl: './user.component.scss'
 })
 export class UserComponent {
-  //@Input() userList!: User;
-  firestore: Firestore = inject(Firestore);
-  //allUsersList: User[] = [];
-  //users$!: Observable<User[]>;
 
-  //unsubAllUsers;
+  firestore: Firestore = inject(Firestore);
   
 
-  constructor(public dialog: MatDialog, private userService: UserService) {
-   // this.unsubAllUsers = this.subAllUsers();
-   }
+  constructor(public dialog: MatDialog, private userService: UserService) {}
 
-  // ngOnInit(): void {
-  //   const usersCollection = collection(this.firestore, 'users');
-  //   this.users$ = collectionData(usersCollection, {idField: 'customIdName'}) as Observable<User[]>;
-  //   this.users$.subscribe((changes: User[]) => {
-  //     console.log(changes);
-  //     this.allUsers = changes.map(user => new User(user));
-  //   })
-  // }
-
-
-  // subAllUsers() {
-  //   const q = query(this.getUserRef(), limit(100));
-  //   return onSnapshot(q, (list) => {
-  //     this.allUsers = [];
-  //     list.forEach(element => {
-  //       const userData = element.data();
-  //       const user = new User(userData);
-  //       user.customUserId = element.id;
-  //       this.allUsers.push(user);
-  //       console.log(this.allUsers);
-        
-  //     });
-  //   });
-  // }
-
-  // getUserRef() {
-  //   return collection(this.firestore, 'users');
-  // }
 
   getList(): User[]{
     return this.userService.allUsers;
   }
 
+  
   openDialog() {
     this.dialog.open(DialogAddUserComponent);
   }
